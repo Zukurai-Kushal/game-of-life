@@ -1,3 +1,3 @@
-# web-dev-template
+# Game of Life
 
-A template repository for web development projects
+A website for Conway's Game of Life
