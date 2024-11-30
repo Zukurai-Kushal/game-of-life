@@ -440,9 +440,7 @@ function runGame() {
 }
 
 function pauseGame() {
-  console.log(gameIntervalID);
   gameIntervalID = window.clearInterval(gameIntervalID);
-  console.log(gameIntervalID);
 }
 
 export function init_display() {
