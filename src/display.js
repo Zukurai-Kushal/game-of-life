@@ -28,15 +28,27 @@ let gameSpeed = 60; //(fps)
 const gameDisplayContainer = document.getElementById("game-display-container");
 let gameIntervalID;
 
-export function displayGame(gameState) {
+export function displayGame(gameState, prevState = undefined) {
   if (document.getElementById("game-grid") === null) {
     init_game_display();
   }
 
   const gameGrid = document.getElementById("game-grid");
 
-  for (const cell of gameGrid.querySelectorAll(".cell.alive")) {
-    cell.classList.remove("alive");
+  if (prevState === undefined) {
+    for (const cell of gameGrid.querySelectorAll(".cell.alive")) {
+      cell.classList.remove("alive");
+    }
+  } else {
+    prevState.forEach((cell) => {
+      let [row, col] = repositionCoordinates(
+        "display",
+        stringToCoordinates(cell),
+      );
+      if (row >= 0 && row < gameGridSize && col >= 0 && col < gameGridSize) {
+        gameGrid.rows[row].cells[col].classList.remove("alive");
+      }
+    });
   }
 
   gameState.forEach((cell) => {
@@ -397,8 +409,9 @@ function updateSpeed(newSpeedValue) {
 }
 
 function displayNextState() {
+  const prevState = currentState;
   updateState();
-  displayGame(currentState);
+  displayGame(currentState, prevState);
 }
 
 function init_keyboard_support() {
@@ -434,8 +447,7 @@ function init_keyboard_support() {
 function runGame() {
   gameIntervalID = window.clearInterval(gameIntervalID);
   gameIntervalID = window.setInterval(() => {
-    updateState();
-    displayGame(currentState);
+    displayNextState();
   }, 1000 / gameSpeed);
 }
 
